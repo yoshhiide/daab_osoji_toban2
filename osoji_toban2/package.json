@@ -2,26 +2,22 @@
   "name": "starter",
   "version": "0.3.2",
   "private": true,
-
   "author": "L is B corp.",
-
   "keywords": [
     "hubot",
     "direct",
     "bot",
     "daab"
   ],
-
   "description": "A simple helpful robot for your Company",
-
   "dependencies": {
-    "lisb-hubot":    "^2.16.0",
+    "forever": "0.13.0",
     "hubot-scripts": ">= 2.5.7 < 3.0.0",
-    "forever": "0.13.0"
+    "lisb-hubot": "^2.16.0",
+    "lodash": "^4.15.0"
   },
-
   "engines": {
-    "node": ">= 0.8.x",
-    "npm":  ">= 1.1.x"
+    "node": ">= 6.0.x",
+    "npm": ">= 3.0.x"
   }
 }
