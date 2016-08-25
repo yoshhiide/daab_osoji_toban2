@@ -20,7 +20,7 @@
 ## Redisデータ設計
 
 ### Key
-- [admin_room_id] 管理ルームのID
+- [admin_rooms] 管理ルームのステータス（ルームID、アクション）
 - [all_members] 全ての登録済みメンバー名
 - [unchosen] 現在の周期で未選出のメンバー名
 - [timers] アラート時刻
@@ -28,9 +28,15 @@
 ### Data
 ```json
 {
-  'admin_room_id': {
-    '_000000_000000': '_222222_222222',
-    '_111111_111111': '_333333_333333'
+  'admin_rooms': {
+    '_000000_000000': {
+      room: '_222222_222222',
+      action: 'MEMBER'
+    },
+    '_111111_111111': {
+      room: '_333333_333333',
+      action: 'START_TIME_HOUR'
+    }
   },
   'all_members': {
     '_000000_000000': [
@@ -57,35 +63,44 @@
   },
   'timers': {
     '_000000_000000': {
-      start: {
+      'choose': 3,
+      'week': '3',
+      'start': {
         'message': 'お掃除開始します！\n今週のお掃除担当者は・・・',
-        'choose': 3,
         'hour': 18,
-        'minute': 30,
-        'week': '3'
+        'minute': 30
       },
-      end: {
+      'end': {
         'message': '終了。用がない人は帰宅するように。',
         'hour': 18,
-        'minute': 40,
-        'week': '3'
+        'minute': 40
       }
     },
     '_111111_111111': {
-      start: {
+      'choose': 1,
+      'week': '1-5',
+      'start': {
         'message': '始業です！\n今日の昼飯注文担当者は・・・',
-        'choose': 1,
         'hour': 9,
-        'minute': 30,
-        'week': '1-5'
+        'minute': 30
       },
-      end: {
+      'end': {
         'message': '本日も１日お疲れ様でした。',
         'hour': 18,
-        'minute': 30,
-        'week': '1-5'
+        'minute': 30
       }
     }
   }
 }
 ```
+
+### action kind
+- MEMBER
+- CHOOSE
+- TIME_MINUTE
+- START_MESSAGE
+- START_TIME_WEEK
+- START_TIME_HOUR
+- END_MESSAGE
+- END_TIME_HOUR
+- END_TIME_MINUTE
