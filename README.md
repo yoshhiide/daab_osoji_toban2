@@ -28,7 +28,7 @@
 ### Data
 ```json
 {
-  'admin_room_id': {
+  'admin_rooms': {
     '_000000_000000': {
       room: '_222222_222222',
       action: 'MEMBER'
