@@ -4,12 +4,16 @@
 
 const _ = require('lodash');
 
-const IORedisOsoji = require('./component/io-redis-osoji');
-const hearText     = require('./component/hear-text');
-const _res         = require('./component/util-res');
+const Redis     = require('./component/redis');
+const hearText  = require('./component/hear-text');
+const util      = require('./component/util');
+const Check     = require('./component/check');
+const Members   = require('./component/members');
 
 let _robot;
-let _io;
+let redis;
+let check;
+let members;
 
 
 
@@ -32,12 +36,15 @@ module.exports = (robot) => {
 
 
 const constructor = (robot) => {
-  _robot = robot;
-  _io    = new IORedisOsoji(robot.brain);
+  _robot  = robot;
+  redis   = new Redis(robot);
+  check   = new Check(robot);
+  members = new Members(robot);
 
   // Redisの準備後、１度実行
   robot.brain.once('loaded', onceLoaded);
 };
+
 
 const hearTextMessage = (res) => {
   // 入力内容
@@ -47,22 +54,25 @@ const hearTextMessage = (res) => {
   res.send('your message is ' + msg);
 
   // 管理ルームでなければ何もしない
-  if (!checkAdminRoom(res)) return;
+  if (!check.adminRoom(res)) return;
 
   // 登録メンバー編集
-  editMembers({res, msg});
+  members.edit({res, msg});
 };
 
 // Redisの準備後、１度実行
 const onceLoaded = () => {
   console.log('loaded');
-  const adminRoomIds = _io.brainGetAllAdminRoomIds();
+  const adminRoomIds = redis.admin.loadAll();
 };
 
 // ボットがトークに招待された場合に実行
 const joinRoom = (res) => {
+  // この組織のID
+  const domainId = util.res.getDomainId(res);
+
   // この組織の管理ルームID
-  const adminRoomId = checkAdminRoomId(res);
+  const adminRoomId = redis.admin.loadOne(domainId);
 
   // 組織に管理ルームがあれば何もしない
   if (!!adminRoomId) return;
@@ -75,20 +85,20 @@ const joinRoom = (res) => {
 };
 
 const hearSelect = (res) => {
-  const question = _res.getResQuestion(res);
-  const options  = _res.getResOptions(res);
-  const response = _res.getResponse(res);
+  const question = util.res.getResQuestion(res);
+  const options  = util.res.getResOptions(res);
+  const response = util.res.getResponse(res);
 
   // セレクトスタンプが送信されたものであれば何もしない
   if (_.isUndefined(response)) return false;
 
   if (question === 'このトークルームを管理ルームに設定しますか？') {
     if (options[response] === '設定する') {
-      const domainId = _res.getDomainId(res);
-      const roomId   = _res.getRoomId(res);
+      const domainId = util.res.getDomainId(res);
+      const roomId   = util.res.getRoomId(res);
 
       // Redisにセーブ
-      _io.setAdminRoomId({domainId, roomId});
+      redis.admin.save({domainId, roomId});
 
       _robot.send({room: roomId}, {
         text: '管理ルームに設定しました。'
@@ -116,11 +126,11 @@ const hearSelect = (res) => {
 
   if (question === '何をしますか？') {
     if (options[response] === '登録メンバーの確認') {
-      const domainId = _res.getDomainId(res);
-      const roomId   = _res.getRoomId(res);
+      const domainId = util.res.getDomainId(res);
+      const roomId   = util.res.getRoomId(res);
 
       // Redisからこの組織の登録メンバー取得
-      const members = _io.getMembers(domainId);
+      const members = redis.members.loadOne(domainId);
 
       if (members.length === 0) {
         _robot.send({room: roomId}, {
@@ -143,11 +153,11 @@ const hearSelect = (res) => {
     }
 
     if (options[response] === '管理ルームから解除') {
-      const domainId = _res.getDomainId(res);
-      const roomId   = _res.getRoomId(res);
+      const domainId = util.res.getDomainId(res);
+      const roomId   = util.res.getRoomId(res);
 
       // Redisにセーブ
-      _io.setAdminRoomId({domainId, roomId: false});
+      redis.admin.save({domainId, roomId: false});
 
       _robot.send({room: roomId}, {
         text: '管理ルームから解除しました。'
@@ -165,50 +175,11 @@ const hearSelect = (res) => {
 const sendWhatDo = (roomId) => {
   _robot.send({room: roomId}, {
     question: '何をしますか？',
-    options : ['登録メンバーの確認', '管理ルームから解除']
+    options : [
+      'メンバー登録・削除',
+      '登録メンバーの確認',
+      '通知日時等の設定',
+      '管理ルームから解除'
+    ]
   });
-};
-
-// このトークルームが管理ルームであるか判定(true/false)
-const checkAdminRoom = (res) => {
-  const roomId = _res.getRoomId(res);
-  const adminRoomId = checkAdminRoomId(res);
-
-  return (adminRoomId === roomId);
-};
-
-const checkAdminRoomId = (res) => {
-  // この組織のID
-  const domainId = _res.getDomainId(res);
-
-  // この組織の管理ルームID
-  return _io.getAdminRoomId(domainId);
-};
-
-const editMembers = ({res, msg}) => {
-  const domainId = _res.getDomainId(res);
-
-  // 入力文字列を改行区切りにする
-  let members = msg.split('\n');
-
-  // 入力文字列をトリム・空行を除外する
-  members = members.map(_.trim).filter(m => m);
-
-  // 何もなければ何もしない
-  if (members.length === 0) return;
-
-  // 登録済みメンバー
-  const registeredMembers = _io.getMembers(domainId);
-
-  // 比較し、存在すれば削除、そうでなければ追加する
-  const newRegisterMembers = compareMembers({registeredMembers, newMembers: members});
-
-  // メンバーを上書登録
-  _io.setMembers({domainId, members: newRegisterMembers});
-};
-
-// 比較し、存在すれば削除、そうでなければ追加する
-const compareMembers = ({registeredMembers, newMembers}) => {
-  // 重複なしメンバーを返す
-  return _.xor(registeredMembers, newMembers);
 };
