@@ -9,7 +9,7 @@ class membersEdit {
   constructor(robot) {
     const redis = new Redis(robot);
 
-    return ({res, msg}) => {
+    return ({ res, msg }) => {
       const domainId = util.res.getDomainId(res);
 
       // 入力文字列を改行区切り・トリム・空行除外
@@ -25,7 +25,7 @@ class membersEdit {
       const newRegisterMembers = _.xor(registeredMembers, members);
 
       // メンバーを上書登録
-      redis.members.save({domainId, members: newRegisterMembers});
+      redis.members.save({ domainId, members: newRegisterMembers });
     };
   }
 }

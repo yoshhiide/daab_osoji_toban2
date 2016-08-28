@@ -35,7 +35,7 @@ class RedisMembers {
   }
 
   // メンバー上書き登録
-  save({domainId, members}) {
+  save({ domainId, members }) {
     if (!domainId || !_.isArray(members)) return false;
 
     const allMembers = this.brainGet();

@@ -57,13 +57,12 @@ const hearTextMessage = (res) => {
   if (!check.adminRoom(res)) return;
 
   // 登録メンバー編集
-  members.edit({res, msg});
+  members.edit({ res, msg });
 };
 
 // Redisの準備後、１度実行
 const onceLoaded = () => {
   console.log('loaded');
-  const adminRoomIds = redis.admin.loadAll();
 };
 
 // ボットがトークに招待された場合に実行
@@ -72,7 +71,7 @@ const joinRoom = (res) => {
   const domainId = util.res.getDomainId(res);
 
   // この組織の管理ルームID
-  const adminRoomId = redis.admin.loadOne(domainId);
+  const adminRoomId = redis.admin.loadRoomId(domainId);
 
   // 組織に管理ルームがあれば何もしない
   if (!!adminRoomId) return;
@@ -98,13 +97,13 @@ const hearSelect = (res) => {
       const roomId   = util.res.getRoomId(res);
 
       // Redisにセーブ
-      redis.admin.save({domainId, roomId});
+      redis.admin.saveRoomId({ domainId, roomId });
 
-      _robot.send({room: roomId}, {
+      _robot.send({ room: roomId }, {
         text: '管理ルームに設定しました。'
       });
 
-      _robot.send({room: roomId}, {
+      _robot.send({ room: roomId }, {
         text: [
           'メンバー登録を行うことができます。',
           '',
@@ -130,10 +129,10 @@ const hearSelect = (res) => {
       const roomId   = util.res.getRoomId(res);
 
       // Redisからこの組織の登録メンバー取得
-      const members = redis.members.loadOne(domainId);
+      const members = redis.members.loadRoomId(domainId);
 
       if (members.length === 0) {
-        _robot.send({room: roomId}, {
+        _robot.send({ room: roomId }, {
           text: '登録メンバーはいませんでした。'
         });
 
@@ -141,7 +140,7 @@ const hearSelect = (res) => {
         sendWhatDo(roomId);
       } else {
         // 登録メンバー
-        _robot.send({room: roomId}, {
+        _robot.send({ room: roomId }, {
           text: members.join('\n')
         });
 
@@ -157,13 +156,13 @@ const hearSelect = (res) => {
       const roomId   = util.res.getRoomId(res);
 
       // Redisにセーブ
-      redis.admin.save({domainId, roomId: false});
+      redis.admin.domainInit(domainId);
 
-      _robot.send({room: roomId}, {
+      _robot.send({ room: roomId }, {
         text: '管理ルームから解除しました。'
       });
 
-      _robot.send({room: roomId}, {
+      _robot.send({ room: roomId }, {
         question: 'このトークルームを管理ルームに設定しますか？',
         options : ['設定する']
       });
@@ -173,7 +172,7 @@ const hearSelect = (res) => {
 };
 
 const sendWhatDo = (roomId) => {
-  _robot.send({room: roomId}, {
+  _robot.send({ room: roomId }, {
     question: '何をしますか？',
     options : [
       'メンバー登録・削除',
