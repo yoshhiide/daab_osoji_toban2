@@ -39,6 +39,16 @@ class WorkflowSend {
     this.act.sendFunc({ roomId, send });
   }
 
+  notAllowManyInput({ roomId }) {
+    const send = { text: '複数行の入力は受け付けていません。入力し直してください。' };
+    this.act.sendFunc({ roomId, send });
+  }
+
+  notAllowStringAllowNumeric({ roomId }) {
+    const send = { text: '数値入力のみ受け付けています。入力し直してください。' };
+    this.act.sendFunc({ roomId, send });
+  }
+
 
 }
 

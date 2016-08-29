@@ -5,7 +5,7 @@ const util = require('../../util');
 
 
 // メンバー登録・削除
-const memberEdit = ({ act, model, workflow }) => {
+const editMember = ({ act, model, workflow }) => {
 
   return ({ res, msg }) => {
     const domainId = util.res.getDomainId({ res });
@@ -28,4 +28,4 @@ const memberEdit = ({ act, model, workflow }) => {
 
 }
 
-module.exports = memberEdit;
+module.exports = editMember;

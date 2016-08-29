@@ -26,6 +26,42 @@ class RedisTimers {
     this.brain.save();
   }
 
+  // 上書セーブ
+  save({ domainId, timer }) {
+    if (!domainId) return false;
+
+    const timers = this.brainGet();
+    timers[domainId] = timer;
+
+    this.brainSet({ timers });
+  }
+
+  saveChoose({ domainId, choose }) {
+    if (!domainId) return false;
+
+    const timers   = this.brainGet();
+    const mergeObj = Object.assign({}, timers[domainId] || {}, { choose });
+    const timer    = Object.assign({}, timers, { [domainId]: mergeObj });
+
+    this.brainSet({ timer });
+  }
+
+  /*
+  saveAction({ domainId, action }) {
+    if (!domainId) return false;
+
+    const rooms    = this.brainGet();
+    const mergeObj = Object.assign({}, rooms[domainId] || {}, { action });
+    const room     = Object.assign({}, rooms, { [domainId]: mergeObj });
+
+    this.brainSet({ rooms });
+  }
+
+  // 組織情報を初期化
+  domainInit({ domainId }) {
+    this.save(domainId, { room: false, action: false });
+  }
+  */
 }
 
 module.exports = RedisTimers;

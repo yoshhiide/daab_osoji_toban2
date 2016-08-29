@@ -51,6 +51,7 @@ class RedisAdmin {
     return this.brainGet();
   }
 
+  // 上書セーブ
   save({ domainId, room }) {
     if (!domainId) return false;
 
