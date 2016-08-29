@@ -8,7 +8,7 @@ const _ = require('lodash');
 
 class RedisUnchosen {
 
-  constructor(robot) {
+  constructor({ robot }) {
     this.brain = robot.brain;
   }
 
@@ -16,7 +16,7 @@ class RedisUnchosen {
     return this.brain.get(KEY_UNCHOSEN) || {};
   }
 
-  brainSet(members) {
+  brainSet({ members }) {
     if (!_.isObject(members)) {
       throw new TypeError('unchosen.brainSet');
       return;
@@ -25,6 +25,7 @@ class RedisUnchosen {
     this.brain.set(KEY_UNCHOSEN, members);
     this.brain.save();
   }
+
 }
 
 module.exports = RedisUnchosen;

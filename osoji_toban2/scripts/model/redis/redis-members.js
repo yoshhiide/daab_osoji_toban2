@@ -8,7 +8,7 @@ const _ = require('lodash');
 
 class RedisMembers {
 
-  constructor(robot) {
+  constructor({ robot }) {
     this.brain = robot.brain;
   }
 
@@ -16,7 +16,7 @@ class RedisMembers {
     return this.brain.get(KEY_ALL_MEMBERS) || {};
   }
 
-  brainSet(members) {
+  brainSet({ members }) {
     if (!_.isObject(members)) {
       throw new TypeError('members.brainSet');
       return;
@@ -41,7 +41,7 @@ class RedisMembers {
     const allMembers = this.brainGet();
     allMembers[domainId] = members;
 
-    this.brainSet(allMembers);
+    this.brainSet({ members: allMembers });
   }
 }
 

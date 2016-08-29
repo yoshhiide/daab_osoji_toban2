@@ -8,7 +8,7 @@ const _ = require('lodash');
 
 class RedisTimers {
 
-  constructor(robot) {
+  constructor({ robot }) {
     this.brain = robot.brain;
   }
 
@@ -16,7 +16,7 @@ class RedisTimers {
     return this.brain.get(KEY_TIMERS) || {};
   }
 
-  brainSet(timers) {
+  brainSet({ timers }) {
     if (!_.isObject(timers)) {
       throw new TypeError('timers.brainSet');
       return;
@@ -25,6 +25,7 @@ class RedisTimers {
     this.brain.set(KEY_TIMERS, timers);
     this.brain.save();
   }
+
 }
 
 module.exports = RedisTimers;
