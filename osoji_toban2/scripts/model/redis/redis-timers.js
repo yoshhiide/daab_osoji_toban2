@@ -46,6 +46,18 @@ class RedisTimers {
     this.brainSet({ timer });
   }
 
+  saveItem({ domainId, choose, member, startMessage, startHour, startMinute, endMessage, endHour, endMinute }) {
+    if (!domainId) return false;
+
+    // TODO: undefinedは除外
+    //
+
+    const timers   = this.brainGet();
+    const mergeObj = Object.assign({}, timers[domainId] || {}, { choose });
+    const timer    = Object.assign({}, timers, { [domainId]: mergeObj });
+
+    this.brainSet({ timer });
+  }
   /*
   saveAction({ domainId, action }) {
     if (!domainId) return false;
