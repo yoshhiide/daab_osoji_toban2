@@ -79,22 +79,19 @@
     '_111111_111111': {
       'choose': 1,
       'week': '1-5',
-      'start': {
-        'message': '始業です！\n今日の昼飯注文担当者は・・・',
-        'hour': 9,
-        'minute': 30
-      },
-      'end': {
-        'message': '本日も１日お疲れ様でした。',
-        'hour': 18,
-        'minute': 30
-      }
+      'start_message': '始業です！\n今日の昼飯注文担当者は・・・',
+      'start_hour': 9,
+      'start_minute': 30,
+      'end_message': '本日も１日お疲れ様でした。',
+      'end_hour': 18,
+      'end_minute': 30
     }
   }
 }
 ```
 
 ### action kind
+- HOME
 - MEMBER
 - CHOOSE
 - WEEK
