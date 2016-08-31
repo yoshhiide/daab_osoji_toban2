@@ -22,4 +22,4 @@ const confirmMember = ({ act, model, workflow }) => ({ res }) => {
 
 }
 
-module.exports = SetAdminRoom;
+module.exports = confirmMember;

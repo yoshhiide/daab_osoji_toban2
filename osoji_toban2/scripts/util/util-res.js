@@ -100,4 +100,4 @@ class UtilRes {
   }
 }
 
-module.exports = new UtilRes();
+module.exports = UtilRes;

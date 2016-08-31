@@ -1,16 +1,16 @@
 'use strict';
 
-const ConfirmMember = require('./confirm-member');
-const AdminRoom     = require('./check-admin-room');
+const ConfirmMember = require('./answer-confirm-member');
+const SetAdminRoom  = require('./answer-set-admin-room');
 
 
-class Answer {
+class WorkflowAnswer {
 
   constructor(args) {
     this.confirmMember = ConfirmMember(args);
-    this.adminRoom     = new AdminRoom(args);
+    this.setAdminRoom  = new SetAdminRoom(args);
   }
 
 }
 
-module.exports = Answer;
+module.exports = WorkflowAnswer;

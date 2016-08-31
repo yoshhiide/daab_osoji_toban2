@@ -14,7 +14,8 @@
     "forever": "0.13.0",
     "hubot-scripts": ">= 2.5.7 < 3.0.0",
     "lisb-hubot": "^2.16.0",
-    "lodash": "^4.15.0"
+    "lodash": "^4.15.0",
+    "merge": "^1.2.0"
   },
   "engines": {
     "node": ">= 6.0.x",

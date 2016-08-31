@@ -1,26 +1,26 @@
 'use strict';
 
-const EditChoose       = require('./edit-choose');
-const EditMember       = require('./edit-member');
-const EditStartMessage = require('./edit-start-message');
-const EditStartHour    = require('./edit-start-hour');
-const EditStartMinute  = require('./edit-start-minute');
-const EditEndMessage   = require('./edit-end-message');
-const EditEndHour      = require('./edit-end-hour');
-const EditEndMinute    = require('./edit-end-minute');
+const Choose       = require('./edit-choose');
+const Member       = require('./edit-member');
+const StartMessage = require('./edit-start-message');
+const StartHour    = require('./edit-start-hour');
+const StartMinute  = require('./edit-start-minute');
+const EndMessage   = require('./edit-end-message');
+const EndHour      = require('./edit-end-hour');
+const EndMinute    = require('./edit-end-minute');
 
 
 class WorkflowEdit {
 
   constructor(args) {
-    this.choose       = EditChoose(args);
-    this.member       = EditMember(args);
-    this.startMessage = EditStartMessage(args);
-    this.startHour    = EditStartHour(args);
-    this.startMinute  = EditStartMinute(args);
-    this.endMessage   = EditEndMessage(args);
-    this.endHour      = EditEndHour(args);
-    this.endMinute    = EditEndMinute(args);
+    this.choose       = Choose(args);
+    this.member       = Member(args);
+    this.startMessage = StartMessage(args);
+    this.startHour    = StartHour(args);
+    this.startMinute  = StartMinute(args);
+    this.endMessage   = EndMessage(args);
+    this.endHour      = EndHour(args);
+    this.endMinute    = EndMinute(args);
   }
 
 }
