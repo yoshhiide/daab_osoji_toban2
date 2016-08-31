@@ -3,7 +3,7 @@ const util = require('../../util');
 
 
 // このトークルームが管理ルームであるか判定(true/false)
-const checkAdminRoom = ({ model }) => () => {
+const checkAdminRoom = ({ model }) => {
 
   return ({ res }) => {
     const roomId = util.res.getRoomId({ res });
@@ -12,7 +12,8 @@ const checkAdminRoom = ({ model }) => () => {
     const domainId = util.res.getDomainId({ res });
 
     // この組織の管理ルームID
-    const adminRoomId = model.redis.admin.loadOne({ domainId });
+    const adminRoom   = model.redis.admin.loadOne({ domainId });
+    const adminRoomId = _.get(adminRoom, 'room');
 
     return (adminRoomId === roomId);
   };

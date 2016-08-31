@@ -64,21 +64,19 @@ class RedisAdmin {
   saveRoomId({ domainId, roomId }) {
     if (!domainId) return false;
 
-    const rooms    = this.brainGet();
-    const mergeObj = Object.assign({}, rooms[domainId] || {}, { room: roomId });
-    const room     = Object.assign({}, rooms, { [domainId]: mergeObj });
+    const rooms = this.brainGet();
+    const room  = Object.assign({}, rooms[domainId] || {}, { room: roomId });
 
-    this.brainSet({ rooms });
+    this.save({ domainId, room });
   }
 
   saveAction({ domainId, action }) {
     if (!domainId) return false;
 
     const rooms    = this.brainGet();
-    const mergeObj = Object.assign({}, rooms[domainId] || {}, { action });
-    const room     = Object.assign({}, rooms, { [domainId]: mergeObj });
+    const room = Object.assign({}, rooms[domainId] || {}, { action });
 
-    this.brainSet({ rooms });
+    this.save({ domainId, room });
   }
 
   // 組織情報を初期化

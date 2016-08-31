@@ -4,35 +4,35 @@ const _    = require('lodash');
 const util = require('../../util');
 
 
-// 担当選出数の登録
-const editChoose = ({ act, model, workflow }) => {
+// 終了時刻(Minute)の登録
+const editEndMinute = ({ act, model, workflow }) => {
 
   return ({ res, msg }) => {
     const domainId = util.res.getDomainId({ res });
     const roomId   = util.res.getRoomId({ res });
 
     // 入力文字列を改行区切り・トリム・空行除外
-    const choose = msg.split('\n').map(_.trim).filter(m => m);
+    const minute = msg.split('\n').map(_.trim).filter(m => m);
 
-    const chooseNum = Number(_.head(choose));
+    const minuteNum = Number(_.head(minute));
 
     // 1行の入力でない場合
-    if (choose.length !== 1) {
+    if (minute.length !== 1) {
       workflow.send.notAllowManyInput({ roomId });
       return;
     }
 
     // 数値でない場合
-    if (!chooseNum && (chooseNum !== 0)) {
+    if (!minuteNum && (minuteNum !== 0)) {
       workflow.send.notAllowStringAllowNumeric({ roomId });
       return;
     }
 
 
-    // 担当者選出数を上書登録
-    model.redis.timers.saveItems({ domainId, choose: chooseNum });
+    // 終了分を上書登録
+    model.redis.timers.saveItems({ domainId, end_minute: minuteNum });
   };
 
 }
 
-module.exports = editChoose;
+module.exports = editEndMinute;

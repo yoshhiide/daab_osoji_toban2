@@ -3,7 +3,7 @@
 const util = require('../../util');
 
 
-class SetAdminRoom {
+class AdminRoom {
 
   constructor({ act, model, workflow }) {
     this.act      = act;
@@ -40,4 +40,4 @@ class SetAdminRoom {
 
 }
 
-module.exports = SetAdminRoom;
+module.exports = AdminRoom;

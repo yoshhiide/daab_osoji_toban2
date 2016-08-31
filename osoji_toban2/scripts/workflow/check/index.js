@@ -2,12 +2,12 @@
 
 const AdminRoom = require('./check-admin-room');
 
-class Check {
+class WorkflowCheck {
 
-  constructor(robot) {
-    this.adminRoom = new AdminRoom(robot);
+  constructor(args) {
+    this.adminRoom = AdminRoom(args);
   }
 
 }
 
-module.exports = Check;
+module.exports = WorkflowCheck;

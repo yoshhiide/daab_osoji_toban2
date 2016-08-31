@@ -19,7 +19,7 @@ class WorkflowQuestion {
         '管理ルームから解除'
       ]
     };
-    act.sendFunc({ roomId, send });
+    this.act.sendFunc({ roomId, send });
   }
 
   setAdminRoom({ roomId }) {
@@ -27,7 +27,7 @@ class WorkflowQuestion {
       question: 'このトークルームを管理ルームに設定しますか？',
       options : ['設定する']
     };
-    act.sendFunc({ roomId, send });
+    this.act.sendFunc({ roomId, send });
   }
 
 

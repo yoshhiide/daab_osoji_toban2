@@ -4,7 +4,9 @@ const _ = require('lodash');
 
 
 const hearText = (res) => {
-  let msg = res.match[1];
+  let msg = _.get(res, 'match[1]');
+
+  if (!msg) return false;
 
   // ペアトークの場合
   if (res.message.roomType === 1) {
@@ -16,6 +18,7 @@ const hearText = (res) => {
   // トークルーム名の変更を対象外に
   if (_.isNull(res.message.id)) return false;
 
+  /*
   // スタンプ、セレクトスタンプのバリデーション
   if (((msg.includes('stamp_set')) &&
        (msg.includes('stamp_index'))) ||
@@ -25,6 +28,7 @@ const hearText = (res) => {
     console.log('スタンプなどのバリデーション');
     return false;
   }
+  */
 
   return msg;
 };

@@ -12,11 +12,11 @@ class Workflow {
   constructor({ act, model }) {
     const args = { act, model, workflow: this };
 
-    this.answer   = Answer(args);
-    this.check    = Check(args);
-    this.edit     = Edit(args);
-    this.question = Question(args);
-    this.send     = Send(args);
+    this.answer   = new Answer(args);
+    this.check    = new Check(args);
+    this.edit     = new Edit(args);
+    this.question = new Question(args);
+    this.send     = new Send(args);
   }
 
 }

@@ -35,7 +35,7 @@ class RedisTimers {
 
     this.brainSet({ timers });
   }
-
+/*
   saveChoose({ domainId, choose }) {
     if (!domainId) return false;
 
@@ -45,18 +45,28 @@ class RedisTimers {
 
     this.brainSet({ timer });
   }
+*/
 
-  saveItem({ domainId, choose, member, startMessage, startHour, startMinute, endMessage, endHour, endMinute }) {
+  saveItems({ domainId, choose, member, start_message, start_hour, start_minute, end_message, end_hour, end_minute }) {
     if (!domainId) return false;
 
-    // TODO: undefinedは除外
-    //
+    // undefinedは除外
+    const saveItems = [
+      choose,
+      member,
+      start_message,
+      start_hour,
+      start_minute,
+      end_message,
+      end_hour,
+      end_minute
+    ].filter(item => !_.isUndefined(_.head(_.values(item))));
 
-    const timers   = this.brainGet();
-    const mergeObj = Object.assign({}, timers[domainId] || {}, { choose });
-    const timer    = Object.assign({}, timers, { [domainId]: mergeObj });
+    const timers = this.brainGet();
+    const timer  = Object.assign({}, timers[domainId] || {}, ...saveItems);
+    //const timer    = Object.assign({}, timers, { [domainId]: mergeObj });
 
-    this.brainSet({ timer });
+    this.save({ domainId, timer });
   }
   /*
   saveAction({ domainId, action }) {

@@ -1,14 +1,14 @@
 'use strict';
 
 const ConfirmMember = require('./answer-confirm-member');
-const SetAdminRoom  = require('./answer-set-admin-room');
+const AdminRoom     = require('./answer-admin-room');
 
 
 class WorkflowAnswer {
 
   constructor(args) {
     this.confirmMember = ConfirmMember(args);
-    this.setAdminRoom  = new SetAdminRoom(args);
+    this.adminRoom     = new AdminRoom(args);
   }
 
 }

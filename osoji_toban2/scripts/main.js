@@ -29,6 +29,9 @@ module.exports = (robot) => {
 
   // セレクトスタンプ受信
   robot.hear('select', hearSelect);
+
+  // スタンプ受信
+  robot.hear('stamp', hearStamp);
 }
 
 
@@ -45,6 +48,23 @@ const constructor = (robot) => {
 const onceLoaded = () => {
   console.log('loaded');
 };
+
+
+const hearStamp = (res) => {
+  // 管理ルームでなければ何もしない
+  if (!workflow.check.adminRoom({ res })) return;
+
+  // ルームID, 組織のID
+  const roomId = util.res.getRoomId({ res });
+  const domainId = util.res.getDomainId({ res });
+
+  // アクション初期化
+  model.redis.admin.saveAction({ domainId, action: 'HOME' });
+
+  // アクション送信
+  workflow.question.whatDo({ roomId });
+};
+
 
 const hearTextMessage = (res) => {
   // 入力内容
@@ -133,7 +153,8 @@ const hearTextMessage = (res) => {
 
 // ボットがトークに招待された場合に実行
 const joinRoom = (res) => {
-  // この組織のID
+  // ルームID, 組織のID
+  const roomId   = util.res.getRoomId({ res });
   const domainId = util.res.getDomainId({ res });
 
   // この組織の管理ルームID
@@ -143,7 +164,7 @@ const joinRoom = (res) => {
   if (!!adminRoomId) return;
 
   // 組織に管理ルームがなければ、設定メッセージ
-  workflow.send.question.setAdminRoom({ roomId });
+  workflow.question.setAdminRoom({ roomId });
 };
 
 const hearSelect = (res) => {
