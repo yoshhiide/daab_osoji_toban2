@@ -18,19 +18,25 @@ const editStartMinute = ({ act, model, workflow }) => {
 
     // 1行の入力でない場合
     if (minute.length !== 1) {
-      workflow.send.notAllowManyInput({ roomId });
+      workflow.message.notAllowManyInput({ roomId });
       return;
     }
 
     // 数値でない場合
     if (!minuteNum && (minuteNum !== 0)) {
-      workflow.send.notAllowStringAllowNumeric({ roomId });
+      workflow.message.notAllowStringAllowNumeric({ roomId });
       return;
     }
 
 
     // 開始分を上書登録
-    model.redis.timers.saveItems({ domainId, start_minute: minuteNum });
+    model.timers.saveItems({ domainId, start_minute: minuteNum });
+
+    // アクション設定
+    model.admin.saveAction({ domainId, action: 'SETTING' });
+
+    // 設定メッセージ送信
+    workflow.question.whatSetting({ roomId });
   };
 
 }

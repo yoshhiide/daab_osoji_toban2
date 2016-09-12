@@ -6,7 +6,7 @@ const KEY_ALL_MEMBERS = 'all_members';
 const _ = require('lodash');
 
 
-class RedisMembers {
+class Members {
 
   constructor({ robot }) {
     this.brain = robot.brain;
@@ -27,7 +27,7 @@ class RedisMembers {
   }
 
   // (指定組織)
-  loadOne(domainId) {
+  loadOne({ domainId }) {
     if (!domainId) return false;
 
     const allMembers = this.brainGet();
@@ -45,4 +45,4 @@ class RedisMembers {
   }
 }
 
-module.exports = RedisMembers;
+module.exports = Members;

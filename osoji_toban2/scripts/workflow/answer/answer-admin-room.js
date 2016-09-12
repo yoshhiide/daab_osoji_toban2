@@ -17,10 +17,10 @@ class AdminRoom {
     const roomId   = util.res.getRoomId({ res });
 
     // Redisにセーブ
-    this.model.redis.admin.saveRoomId({ domainId, roomId });
+    this.model.admin.saveRoomId({ domainId, roomId });
 
     // 管理ルーム設定のメッセージ
-    this.workflow.send.setAdminRoom({ roomId });
+    this.workflow.message.setAdminRoom({ roomId });
     this.workflow.question.whatDo({ roomId });
   }
 
@@ -30,11 +30,11 @@ class AdminRoom {
     const roomId   = util.res.getRoomId({ res });
 
     // Redisにセーブ
-    this.model.redis.admin.domainInit({ domainId });
+    this.model.admin.domainInit({ domainId });
 
     // 管理ルーム解除のメッセージ
-    this.workflow.send.unsetAdminRoom({ roomId });
-    this.workflow.send.questionSetAdminRoom({ roomId });
+    this.workflow.message.unsetAdminRoom({ roomId });
+    this.workflow.question.setAdminRoom({ roomId });
   }
 
 

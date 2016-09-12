@@ -9,14 +9,15 @@ const confirmMember = ({ act, model, workflow }) => ({ res }) => {
   const roomId   = util.res.getRoomId({ res });
 
   // Redisからこの組織の登録メンバー取得
-  const members = model.redis.members.loadRoomId({ domainId });
+  const members = model.members.loadOne({ domainId });
 
   if (members.length === 0) {
-    act.sendFunc({ roomId, text: '登録メンバーはいませんでした。' });
+    console.log('roomId', roomId);
+    act.sendFunc({ roomId, send: { text: '登録メンバーはいませんでした。' } });
     workflow.question.whatDo({ roomId });
   } else {
     // 登録メンバー名をメッセージ送信
-    act.sendFunc({ roomId, text: members.join('\n') });
+    act.sendFunc({ roomId, send: { text: members.join('\n') } });
     workflow.question.whatDo({ roomId });
   }
 

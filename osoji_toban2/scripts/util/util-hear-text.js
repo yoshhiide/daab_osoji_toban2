@@ -3,7 +3,7 @@
 const _ = require('lodash');
 
 
-const hearText = (res) => {
+const hearText = ({ res }) => {
   let msg = _.get(res, 'match[1]');
 
   if (!msg) return false;

@@ -13,13 +13,37 @@ class WorkflowQuestion {
     const send = {
       question: '何をしますか？',
       options : [
-        'メンバー登録・削除',
+        '通知項目設定',
         '登録メンバーの確認',
-        '通知日時等の設定',
         '管理ルームから解除'
       ]
     };
     this.act.sendFunc({ roomId, send });
+  }
+
+  whatSetting({ roomId }) {
+    const send1 = {
+      question: '設定項目を選んでください。',
+      options : [
+        'メンバー',
+        '選出メンバー数',
+        '曜日',
+        '開始メッセージ',
+        '開始時刻（Hour）',
+        '開始時刻（Minute）',
+        '終了メッセージ',
+        '終了時刻（Hour）',
+        '終了時刻（Minute）',
+      ]
+    };
+    const send2 = {
+      question: '設定項目を選んでください。',
+      options : [
+        '[ 設定終了 ]'
+      ]
+    };
+    this.act.sendFunc({ roomId, send: send1 });
+    this.act.sendFunc({ roomId, send: send2 });
   }
 
   setAdminRoom({ roomId }) {

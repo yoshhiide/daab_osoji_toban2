@@ -17,13 +17,20 @@ const editMember = ({ act, model, workflow }) => {
     if (members.length === 0) return;
 
     // 登録済みメンバー
-    const registeredMembers = model.redis.members.loadOne(domainId);
+    const registeredMembers = model.members.loadOne(domainId);
 
     // 比較し、存在すれば削除、そうでなければ追加する(=重複なしメンバーを残す)
     const newRegisterMembers = _.xor(registeredMembers, members);
 
+
     // メンバーを上書登録
-    model.redis.members.save({ domainId, members: newRegisterMembers });
+    model.members.save({ domainId, members: newRegisterMembers });
+
+    // アクション設定
+    model.admin.saveAction({ domainId, action: 'SETTING' });
+
+    // 設定メッセージ送信
+    workflow.question.whatSetting({ roomId });
   };
 
 }

@@ -1,3 +1,5 @@
+'use strict';
+
 const _    = require('lodash');
 const util = require('../../util');
 
@@ -12,7 +14,7 @@ const checkAdminRoom = ({ model }) => {
     const domainId = util.res.getDomainId({ res });
 
     // この組織の管理ルームID
-    const adminRoom   = model.redis.admin.loadOne({ domainId });
+    const adminRoom   = model.admin.loadOne({ domainId });
     const adminRoomId = _.get(adminRoom, 'room');
 
     return (adminRoomId === roomId);

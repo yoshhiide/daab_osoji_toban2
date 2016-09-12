@@ -10,7 +10,13 @@ const editEndMessage = ({ act, model, workflow }) => {
     const domainId = util.res.getDomainId({ res });
 
     // メッセージを上書登録
-    model.redis.timers.saveItems({ domainId, end_message: msg });
+    model.timers.saveItems({ domainId, end_message: msg });
+
+    // アクション設定
+    model.admin.saveAction({ domainId, action: 'SETTING' });
+
+    // 設定メッセージ送信
+    workflow.question.whatSetting({ roomId });
   };
 
 };

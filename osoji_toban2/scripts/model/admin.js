@@ -6,7 +6,7 @@ const KEY_ADMIN_ROOMS  = 'admin_rooms';
 const _ = require('lodash');
 
 
-class RedisAdmin {
+class Admin {
 
   constructor({ robot }) {
     this.brain = robot.brain;
@@ -52,11 +52,11 @@ class RedisAdmin {
   }
 
   // 上書セーブ
-  save({ domainId, room }) {
+  save({ domainId, roomData }) {
     if (!domainId) return false;
 
     const rooms = this.brainGet();
-    rooms[domainId] = room;
+    rooms[domainId] = roomData;
 
     this.brainSet({ rooms });
   }
@@ -64,25 +64,25 @@ class RedisAdmin {
   saveRoomId({ domainId, roomId }) {
     if (!domainId) return false;
 
-    const rooms = this.brainGet();
-    const room  = Object.assign({}, rooms[domainId] || {}, { room: roomId });
+    const rooms    = this.brainGet();
+    const roomData = Object.assign({}, rooms[domainId] || {}, { room: roomId });
 
-    this.save({ domainId, room });
+    this.save({ domainId, roomData });
   }
 
   saveAction({ domainId, action }) {
     if (!domainId) return false;
 
     const rooms    = this.brainGet();
-    const room = Object.assign({}, rooms[domainId] || {}, { action });
+    const roomData = Object.assign({}, rooms[domainId] || {}, { action });
 
-    this.save({ domainId, room });
+    this.save({ domainId, roomData });
   }
 
   // 組織情報を初期化
   domainInit({ domainId }) {
-    this.save(domainId, { room: false, action: false });
+    this.save({ domainId, roomData: { room: false, action: false } });
   }
 }
 
-module.exports = RedisAdmin;
+module.exports = Admin;

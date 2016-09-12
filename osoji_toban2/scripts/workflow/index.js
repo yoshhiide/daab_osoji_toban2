@@ -4,7 +4,7 @@ const Answer   = require('./answer');
 const Check    = require('./check');
 const Edit     = require('./edit');
 const Question = require('./question');
-const Send     = require('./send');
+const Message  = require('./message');
 
 
 class Workflow {
@@ -16,7 +16,7 @@ class Workflow {
     this.check    = new Check(args);
     this.edit     = new Edit(args);
     this.question = new Question(args);
-    this.send     = new Send(args);
+    this.message  = new Message(args);
   }
 
 }

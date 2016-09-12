@@ -6,7 +6,7 @@ const KEY_TIMERS = 'timers';
 const _ = require('lodash');
 
 
-class RedisTimers {
+class Timers {
 
   constructor({ robot }) {
     this.brain = robot.brain;
@@ -47,19 +47,20 @@ class RedisTimers {
   }
 */
 
-  saveItems({ domainId, choose, member, start_message, start_hour, start_minute, end_message, end_hour, end_minute }) {
+  saveItems({ domainId, choose, member, week, start_message, start_hour, start_minute, end_message, end_hour, end_minute }) {
     if (!domainId) return false;
 
     // undefinedは除外
     const saveItems = [
-      choose,
-      member,
-      start_message,
-      start_hour,
-      start_minute,
-      end_message,
-      end_hour,
-      end_minute
+      { choose },
+      { member },
+      { week },
+      { start_message },
+      { start_hour },
+      { start_minute },
+      { end_message },
+      { end_hour },
+      { end_minute }
     ].filter(item => !_.isUndefined(_.head(_.values(item))));
 
     const timers = this.brainGet();
@@ -86,4 +87,4 @@ class RedisTimers {
   */
 }
 
-module.exports = RedisTimers;
+module.exports = Timers;

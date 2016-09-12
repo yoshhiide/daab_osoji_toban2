@@ -6,7 +6,7 @@ const KEY_UNCHOSEN = 'unchosen';
 const _ = require('lodash');
 
 
-class RedisUnchosen {
+class Unchosen {
 
   constructor({ robot }) {
     this.brain = robot.brain;
@@ -28,4 +28,4 @@ class RedisUnchosen {
 
 }
 
-module.exports = RedisUnchosen;
+module.exports = Unchosen;

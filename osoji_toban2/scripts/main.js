@@ -59,7 +59,7 @@ const hearStamp = (res) => {
   const domainId = util.res.getDomainId({ res });
 
   // アクション初期化
-  model.redis.admin.saveAction({ domainId, action: 'HOME' });
+  model.admin.saveAction({ domainId, action: 'HOME' });
 
   // アクション送信
   workflow.question.whatDo({ roomId });
@@ -81,7 +81,7 @@ const hearTextMessage = (res) => {
   const domainId = util.res.getDomainId({ res });
 
   // 現在のアクション
-  const action = model.redis.admin.loadAction({ domainId });
+  const action = model.admin.loadAction({ domainId });
 
   // アクション別処理
   switch (action) {
@@ -142,7 +142,7 @@ const hearTextMessage = (res) => {
 
     default: {
       // 選択肢から選んでください
-      workflow.send.notFoundAction({ roomId });
+      workflow.message.notFoundAction({ roomId });
 
       // アクション送信
       workflow.question.whatDo({ roomId });
@@ -158,7 +158,7 @@ const joinRoom = (res) => {
   const domainId = util.res.getDomainId({ res });
 
   // この組織の管理ルームID
-  const adminRoomId = model.redis.admin.loadRoomId({ domainId });
+  const adminRoomId = model.admin.loadRoomId({ domainId });
 
   // 組織に管理ルームがあれば何もしない
   if (!!adminRoomId) return;
@@ -168,6 +168,8 @@ const joinRoom = (res) => {
 };
 
 const hearSelect = (res) => {
+  const roomId   = util.res.getRoomId({ res });
+  const domainId = util.res.getDomainId({ res });
   const question = util.res.getResQuestion({ res });
   const options  = util.res.getResOptions({ res });
   const response = util.res.getResponse({ res });
@@ -188,17 +190,119 @@ const hearSelect = (res) => {
   if (!workflow.check.adminRoom({ res })) return;
 
   if (question === '何をしますか？') {
-    if (options[response] === '登録メンバーの確認') {
-      workflow.answer.confirmMember({ res });
-      return;
-    }
 
-    if (options[response] === '管理ルームから解除') {
-      workflow.answer.adminRoom.unset({ res });
-      return;
-    }
+    // 選択項目別処理
+    switch (options[response]) {
 
-    return;
+      case '通知項目設定': {
+        model.admin.saveAction({ domainId, action: 'SETTING' });
+        workflow.question.whatSetting({ roomId });
+        break;
+      }
+
+      case '登録メンバーの確認': {
+        workflow.answer.confirmMember({ res });
+        break;
+      }
+
+      case '管理ルームから解除': {
+        workflow.answer.adminRoom.unset({ res });
+        break;
+      }
+
+      default: {
+        // 選択肢から選んでください
+        workflow.message.notFoundSelect({ roomId });
+        workflow.question.whatSetting({ roomId });
+      }
+
+    }
+  }
+
+
+  if (question === '設定項目を選んでください。') {
+
+    // 選択項目別処理
+    switch (options[response]) {
+
+      case 'メンバー': {
+        // 登録メンバー編集
+        model.admin.saveAction({ domainId, action: 'MEMBER' });
+        workflow.message.settingMember({ roomId });
+        break;
+      }
+
+      case '選出メンバー数': {
+        // 選出メンバー数編集
+        model.admin.saveAction({ domainId, action: 'CHOOSE' });
+        workflow.message.settingChoose({ roomId });
+        break;
+      }
+
+      case '曜日': {
+        // アラート曜日編集
+        model.admin.saveAction({ domainId, action: 'WEEK' });
+        workflow.message.settingWeek({ roomId });
+        break;
+      }
+
+      case '開始メッセージ': {
+        // 開始時のメッセージ編集
+        model.admin.saveAction({ domainId, action: 'START_MESSAGE' });
+        workflow.message.settingStartMessage({ roomId });
+        break;
+      }
+
+      case '開始時刻（Hour）': {
+        // 開始時刻(Hour)編集
+        model.admin.saveAction({ domainId, action: 'START_HOUR' });
+        workflow.message.settingStartHour({ roomId });
+        break;
+      }
+
+      case '開始時刻（Minute）': {
+        // 開始時刻(minute)編集
+        model.admin.saveAction({ domainId, action: 'START_MINUTE' });
+        workflow.message.settingStartMinute({ roomId });
+        break;
+      }
+
+      case '終了メッセージ': {
+        // 終了時のメッセージ編集
+        model.admin.saveAction({ domainId, action: 'END_MESSAGE' });
+        workflow.message.settingEndMessage({ roomId });
+        break;
+      }
+
+      case '終了時刻（Hour）': {
+        // 終了時刻(Hour)編集
+        model.admin.saveAction({ domainId, action: 'END_HOUR' });
+        workflow.message.settingEndHour({ roomId });
+        break;
+      }
+
+      case '終了時刻（Minute）': {
+        // 終了時刻(minute)編集
+        model.admin.saveAction({ domainId, action: 'END_MINUTE' });
+        workflow.message.settingEndMinute({ roomId });
+        break;
+      }
+
+      case '[ 設定終了 ]': {
+        model.admin.saveAction({ domainId, action: 'HOME' });
+        workflow.question.whatDo({ roomId });
+        break;
+      }
+
+      default: {
+        // 選択肢から選んでください
+        workflow.message.notFoundSelect({ roomId });
+
+        // アクション送信
+        workflow.question.whatSetting({ roomId });
+      }
+
+    }
   }
 };
 

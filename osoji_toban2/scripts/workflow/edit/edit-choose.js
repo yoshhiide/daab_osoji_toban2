@@ -18,19 +18,25 @@ const editChoose = ({ act, model, workflow }) => {
 
     // 1行の入力でない場合
     if (choose.length !== 1) {
-      workflow.send.notAllowManyInput({ roomId });
+      workflow.message.notAllowManyInput({ roomId });
       return;
     }
 
     // 数値でない場合
     if (!chooseNum && (chooseNum !== 0)) {
-      workflow.send.notAllowStringAllowNumeric({ roomId });
+      workflow.message.notAllowStringAllowNumeric({ roomId });
       return;
     }
 
 
     // 担当者選出数を上書登録
-    model.redis.timers.saveItems({ domainId, choose: chooseNum });
+    model.timers.saveItems({ domainId, choose: chooseNum });
+
+    // アクション設定
+    model.admin.saveAction({ domainId, action: 'SETTING' });
+
+    // 設定メッセージ送信
+    workflow.question.whatSetting({ roomId });
   };
 
 }
