@@ -32,6 +32,9 @@ const editChoose = ({ act, model, workflow }) => {
     // 担当者選出数を上書登録
     model.timers.saveItems({ domainId, choose: chooseNum });
 
+    // 現在の設定情報をメッセージ送信
+    workflow.message.settingInfo({ domainId, roomId });
+
     // アクション設定
     model.admin.saveAction({ domainId, action: 'SETTING' });
 

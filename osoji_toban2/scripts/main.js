@@ -47,6 +47,9 @@ const constructor = (robot) => {
 // Redisの準備後、１度実行
 const onceLoaded = () => {
   console.log('loaded');
+
+  // cron
+  workflow.process.cronSet();
 };
 
 
@@ -70,8 +73,6 @@ const hearTextMessage = (res) => {
   // 入力内容
   const msg = util.hearText({ res });
   if (!msg) return;
-
-  res.send('your message is ' + msg);
 
   // 管理ルームでなければ何もしない
   if (!workflow.check.adminRoom({ res })) return;

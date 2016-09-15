@@ -26,6 +26,11 @@ class Unchosen {
     this.brain.save();
   }
 
+  // (全組織)
+  loadAll() {
+    return this.brainGet();
+  }
+
 }
 
 module.exports = Unchosen;

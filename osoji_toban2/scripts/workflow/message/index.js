@@ -1,5 +1,7 @@
 'use strict';
 
+const util = require('../../util');
+
 
 class WorkflowMessage {
 
@@ -87,6 +89,43 @@ class WorkflowMessage {
     this.act.sendFunc({ roomId, send });
   }
 
+  // 設定情報
+  settingInfo({ domainId, roomId }) {
+    this.settingTimerInfo({ domainId, roomId });
+    this.settingMemberInfo({ domainId, roomId });
+  }
+
+  // 設定情報(アラート)
+  settingTimerInfo({ domainId, roomId }) {
+    const timer = this.model.timers.loadOne({ domainId });
+    const send = {
+      text: [
+        '【現在の設定状況①】',
+        `選出人数：${timer.choose || 'ー'}`,
+        `曜日　　：${util.numToWeek(timer.week) || '－'}`,
+        `開始時刻：${timer.start_hour || 'ー'}:${util.minuteFormat(timer.start_minute) || 'ー'}`,
+        `終了時刻：${timer.end_hour || 'ー'}:${util.minuteFormat(timer.end_minute) || 'ー'}`,
+        `開始メッセージ：${timer.start_message || 'ー'}`,
+        `終了メッセージ：${timer.end_message || 'ー'}`
+      ].join('\n')
+    };
+    this.act.sendFunc({ roomId, send });
+  }
+
+  // 設定情報(メンバー)
+  settingMemberInfo({ domainId, roomId }) {
+    const member = this.model.members.loadOne({ domainId });
+    const send = {
+      text: [
+        '【現在の設定状況②】',
+        '登録メンバー：',
+        member.join('\n')
+      ].join('\n')
+    };
+    this.act.sendFunc({ roomId, send });
+  }
+
+
 
   notFoundSelect({ roomId }) {
     const send = { text: '選択肢から選んでください。' };
@@ -120,6 +159,10 @@ class WorkflowMessage {
   }
 
 
+  // TODO:
+  alert({ alertMessages }) {
+    console.log('TODO: workflow.message.alert()', alertMessages);
+  }
 }
 
 module.exports = WorkflowMessage;

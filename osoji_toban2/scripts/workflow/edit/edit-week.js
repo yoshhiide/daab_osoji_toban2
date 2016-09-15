@@ -24,8 +24,7 @@ const editWeek = ({ act, model, workflow }) => {
     const weekArr = _.head(week).split('');
 
     // 曜日変換
-    const weekTable = { '日': 0, '月': 1, '火': 2, '水': 3, '木': 4, '金': 5, '土': 6, '日': 7 };
-    const weekNum = weekTable[_.head(weekArr)];
+    const weekNum = util.weekToNum(_.head(weekArr));
 
     // 曜日が入力されていなかった場合
     if (!weekNum && (weekNum !== 0)) {
@@ -36,6 +35,9 @@ const editWeek = ({ act, model, workflow }) => {
 
     // 曜日を上書登録
     model.timers.saveItems({ domainId, week: weekNum });
+
+    // 現在の設定情報をメッセージ送信
+    workflow.message.settingInfo({ domainId, roomId });
 
     // アクション設定
     model.admin.saveAction({ domainId, action: 'SETTING' });

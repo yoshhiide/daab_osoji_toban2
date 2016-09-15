@@ -32,6 +32,9 @@ const editEndMinute = ({ act, model, workflow }) => {
     // 終了分を上書登録
     model.timers.saveItems({ domainId, end_minute: minuteNum });
 
+    // 現在の設定情報をメッセージ送信
+    workflow.message.settingInfo({ domainId, roomId });
+
     // アクション設定
     model.admin.saveAction({ domainId, action: 'SETTING' });
 

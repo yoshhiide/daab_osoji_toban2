@@ -9,6 +9,7 @@ const editMember = ({ act, model, workflow }) => {
 
   return ({ res, msg }) => {
     const domainId = util.res.getDomainId({ res });
+    const roomId   = util.res.getRoomId({ res });
 
     // 入力文字列を改行区切り・トリム・空行除外
     const members = msg.split('\n').map(_.trim).filter(m => m);
@@ -17,14 +18,18 @@ const editMember = ({ act, model, workflow }) => {
     if (members.length === 0) return;
 
     // 登録済みメンバー
-    const registeredMembers = model.members.loadOne(domainId);
+    const registeredMembers = model.members.loadOne({ domainId });
 
     // 比較し、存在すれば削除、そうでなければ追加する(=重複なしメンバーを残す)
     const newRegisterMembers = _.xor(registeredMembers, members);
+    console.log('メンバー確認:', registeredMembers, members);
 
 
     // メンバーを上書登録
     model.members.save({ domainId, members: newRegisterMembers });
+
+    // 現在の設定情報をメッセージ送信
+    workflow.message.settingInfo({ domainId, roomId });
 
     // アクション設定
     model.admin.saveAction({ domainId, action: 'SETTING' });

@@ -35,17 +35,6 @@ class Timers {
 
     this.brainSet({ timers });
   }
-/*
-  saveChoose({ domainId, choose }) {
-    if (!domainId) return false;
-
-    const timers   = this.brainGet();
-    const mergeObj = Object.assign({}, timers[domainId] || {}, { choose });
-    const timer    = Object.assign({}, timers, { [domainId]: mergeObj });
-
-    this.brainSet({ timer });
-  }
-*/
 
   saveItems({ domainId, choose, member, week, start_message, start_hour, start_minute, end_message, end_hour, end_minute }) {
     if (!domainId) return false;
@@ -69,22 +58,21 @@ class Timers {
 
     this.save({ domainId, timer });
   }
-  /*
-  saveAction({ domainId, action }) {
+
+  // (指定組織)
+  loadOne({ domainId }) {
     if (!domainId) return false;
 
-    const rooms    = this.brainGet();
-    const mergeObj = Object.assign({}, rooms[domainId] || {}, { action });
-    const room     = Object.assign({}, rooms, { [domainId]: mergeObj });
-
-    this.brainSet({ rooms });
+    const allTimers = this.brainGet();
+    return allTimers[domainId] || [];
   }
 
-  // 組織情報を初期化
-  domainInit({ domainId }) {
-    this.save(domainId, { room: false, action: false });
+  // (全組織)
+  loadAll() {
+    return this.brainGet();
   }
-  */
+
+
 }
 
 module.exports = Timers;

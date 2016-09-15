@@ -2,6 +2,7 @@
 
 const Choose       = require('./edit-choose');
 const Member       = require('./edit-member');
+const Week         = require('./edit-week');
 const StartMessage = require('./edit-start-message');
 const StartHour    = require('./edit-start-hour');
 const StartMinute  = require('./edit-start-minute');
@@ -15,6 +16,7 @@ class WorkflowEdit {
   constructor(args) {
     this.choose       = Choose(args);
     this.member       = Member(args);
+    this.week         = Week(args);
     this.startMessage = StartMessage(args);
     this.startHour    = StartHour(args);
     this.startMinute  = StartMinute(args);

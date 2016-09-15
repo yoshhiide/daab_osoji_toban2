@@ -34,6 +34,11 @@ class Members {
     return allMembers[domainId] || [];
   }
 
+  // (全組織)
+  loadAll() {
+    return this.brainGet();
+  }
+
   // メンバー上書き登録
   save({ domainId, members }) {
     if (!domainId || !_.isArray(members)) return false;
