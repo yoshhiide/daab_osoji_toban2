@@ -159,9 +159,33 @@ class WorkflowMessage {
   }
 
 
-  // TODO:
+  // アラート送信
   alert({ alertMessages }) {
     console.log('TODO: workflow.message.alert()', alertMessages);
+
+    alertMessages.forEach((roomMessage) => {
+
+      // メッセージ＋選出
+      const message = !!roomMessage.nextMembers.length
+        ? roomMessage.message + '\n\n' + roomMessage.nextMembers.join('\n')
+        : roomMessage.message;
+
+      const send = { text: message };
+
+      roomMessage.rooms.forEach((roomId) => this.act.sendFunc({ roomId, send }));
+
+      // 選出メンバーが０であれば処理しない
+      if (!roomMessage.nextMembers.length) return;
+
+
+      // 入れ替え・キャンセル
+      const selectMessage = {
+        question: '選出されたメンバーを入れ替えることが可能です。\n入れ替える場合は対象者を選択してください。',
+        options : [...roomMessage.nextMembers, '全員再選出', '選出をキャンセル']
+      };
+
+      roomMessage.rooms.forEach((roomId) => this.act.sendFunc({ roomId, send: selectMessage }));
+    });
   }
 }
 

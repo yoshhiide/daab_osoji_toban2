@@ -96,12 +96,13 @@ const cronAlert = ({ act, model, workflow }) => {
       return result;
     }, {});
 
+
     // アラート対象組織・ルーム
-    console.log('[' + new Date() + '] alertDomainRooms', alertDomainIds);
+    console.log('[' + new Date() + '] alertDomainRooms', alertDomainRooms);
 
     // アラート対象のトークルームと送信メッセージ
     // [{ domainId, rooms: [], message, choose }]
-    const alertRoomsMessages = _.reduce(alertDomainRooms, (result, rooms, domainId) => {
+    const alertRoomsMessages = _.reduce(alertDomainRooms, (result, domainRooms, domainId) => {
       const {
         choose,
         start_message,
@@ -114,16 +115,17 @@ const cronAlert = ({ act, model, workflow }) => {
 
       // 開始メッセージ
       if ((start_hour === nowHour) && (start_minute === nowMinute)) {
-        result.push({ domainId, rooms, message: start_message, choose });
+        result.push({ domainId, rooms: domainRooms.rooms, message: start_message, choose });
       }
 
       // 終了メッセージ（選出なし）
       if ((end_hour === nowHour) && (end_minute === nowMinute)) {
-        result.push({ domainId, rooms, message: end_message, choose: 0 });
+        result.push({ domainId, rooms: domainRooms.rooms, message: end_message, choose: 0 });
       }
 
       return result;
     }, []);
+
 
     // メンバー選出
     // [{ domainId, rooms: [], message, nextMembers: [] }]
