@@ -170,9 +170,7 @@ class WorkflowMessage {
         ? roomMessage.message + '\n\n' + roomMessage.nextMembers.join('\n')
         : roomMessage.message;
 
-      const send = { text: message };
-
-      roomMessage.rooms.forEach((roomId) => this.act.sendFunc({ roomId, send }));
+      roomMessage.rooms.forEach((roomId) => this.act.sendFunc({ roomId, send: { text: message } }));
 
       // 選出メンバーが０であれば処理しない
       if (!roomMessage.nextMembers.length) return;
