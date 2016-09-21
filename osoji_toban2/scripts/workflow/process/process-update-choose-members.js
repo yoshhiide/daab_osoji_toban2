@@ -28,7 +28,7 @@ const updateChooseMembers = ({ model, workflow }) => {
     // C. 選出対象メンバー数を判定しながら選出
     let round = false;
 
-    const chooseMembers = _.range(choose).map((idx) => {
+    const chooseMembers = _.range(choose).map(() => {
       // 1巡した場合、今回選出対象でなかったメンバーから選出
       if (targetMembers.length <= 0) {
         round = true;
