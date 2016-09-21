@@ -1,6 +1,6 @@
 'use strict';
 
-// 選出未済メンバー名
+// 選出済みメンバー名
 const KEY_CHOSEN = 'chosen_members';
 
 const _ = require('lodash');
@@ -24,6 +24,14 @@ class Chosen {
 
     this.brain.set(KEY_CHOSEN, members);
     this.brain.save();
+  }
+
+  // (指定組織)
+  loadOne({ domainId }) {
+    if (!domainId) return false;
+
+    const chosenMembers = this.brainGet();
+    return chosenMembers[domainId] || [];
   }
 
   // (全組織)

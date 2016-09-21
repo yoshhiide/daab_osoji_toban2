@@ -17,16 +17,30 @@ const editMember = ({ act, model, workflow }) => {
     // 何もなければ何もしない
     if (members.length === 0) return;
 
-    // 登録済みメンバー
+
+    // A. 登録済みメンバー
     const registeredMembers = model.members.loadOne({ domainId });
 
     // 比較し、存在すれば削除、そうでなければ追加する(=重複なしメンバーを残す)
     const newRegisterMembers = _.xor(registeredMembers, members);
     console.log('メンバー確認:', registeredMembers, members);
 
-
     // メンバーを上書登録
     model.members.save({ domainId, members: newRegisterMembers });
+
+
+    // B. 削除対象メンバー
+    const chosenMembers = model.chosen.loadOne({ domainId });
+    const deleteMembers = _.intersection(registeredMembers, members);
+
+    if (0 < deleteMembers.length) {
+      // 選出済みメンバーに存在する場合は削除する
+      const newChosenMembers = _.pullAll(chosenMembers, deleteMembers);
+
+      // 選出済みメンバーを上書登録
+      model.chosen.save({ domainId, chosen: newChosenMembers });
+    }
+
 
     // 現在の設定情報をメッセージ送信
     workflow.message.settingInfo({ domainId, roomId });
@@ -38,6 +52,6 @@ const editMember = ({ act, model, workflow }) => {
     workflow.question.whatSetting({ roomId });
   };
 
-}
+};
 
 module.exports = editMember;
