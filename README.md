@@ -22,7 +22,7 @@
 ### Key
 - [admin_rooms] 管理ルームのステータス（ルームID、アクション）
 - [all_members] 全ての登録済みメンバー名
-- [unchosen] 現在の周期で未選出のメンバー名
+- [chosen_members] 現在の周期で選出済みのメンバー名
 - [timers] アラート時刻
 
 ### Data
@@ -52,7 +52,7 @@
       '三郎'
     ]
   },
-  'unchosen': {
+  'chosen_members': {
     '_000000_000000': [
       '一郎',
       '二郎'

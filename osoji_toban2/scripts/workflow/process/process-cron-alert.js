@@ -14,9 +14,9 @@ const cronAlert = ({ act, model, workflow }) => {
     const nowMinute = Number(moment().format('m'));
 
     // 全てのアラート情報取得
-    const timers   = model.timers.loadAll();
-    const members  = model.members.loadAll();
-    const unchosen = model.unchosen.loadAll();
+    const timers  = model.timers.loadAll();
+    const members = model.members.loadAll();
+    const chosen  = model.chosen.loadAll();
 
     // アラート対象チェック
     const domainIds = Object.keys(timers);
@@ -34,7 +34,7 @@ const cronAlert = ({ act, model, workflow }) => {
 
       const member = members[domainId];
 
-      if ((!choose || (choose !== 0)) && (!member || (member.length === 0)) && (week !== nowWeek)) {
+      if ((!choose && (choose !== 0)) || (!member || (member.length === 0)) || (week !== nowWeek)) {
         return false;
       }
 
@@ -128,14 +128,16 @@ const cronAlert = ({ act, model, workflow }) => {
     // メンバー選出
     // [{ domainId, rooms: [], message, nextMembers: [] }]
     const alertMessages = alertRoomsMessages.map((oneAlert) => {
+      const { domainId, choose } = oneAlert;
+
       // 選出不要の場合（選出数=0, 終了アラートの場合）
       if (!choose) return oneAlert;
 
       const member = members[domainId];
-      const unchosen = unchosen[domainId];
+      const chosenMembers = chosen[domainId] || [];
 
-      // メンバー選出＆選出未済対象者のRedis更新
-      const nextMembers = workflow.process.updateChooseMembers({ domainId, member, unchosen, choose: oneAlert.choose });
+      // メンバー選出＆選出済み対象者のRedis更新
+      const nextMembers = workflow.process.updateChooseMembers({ domainId, member, chosen: chosenMembers, choose: oneAlert.choose });
 
       return Object.assign({}, oneAlert, { nextMembers });
     });
