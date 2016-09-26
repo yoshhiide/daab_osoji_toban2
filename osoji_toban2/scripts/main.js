@@ -305,5 +305,28 @@ const hearSelect = (res) => {
 
     }
   }
+
+
+  if (question === '選出されたメンバーを入れ替えることが可能です。\n入れ替える場合は対象者を選択してください。') {
+
+    // 選択項目別処理
+    switch (options[response]) {
+
+      case '全員再選出': {
+        // TODO
+        break;
+      }
+
+      case '選出をキャンセル': {
+        // TODO
+        break;
+      }
+
+      default: {
+        // メンバー名の選択の場合
+        // TODO
+      }
+    }
+  }
 };
 
